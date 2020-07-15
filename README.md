@@ -3,6 +3,13 @@
 __[Enter The Web App](https://neos21.github.io/list-repos/)__
 
 
+## Show Your GitHub Repositories At First
+
+```
+https://neos21.github.io/list-repos/?user=【User Name】
+```
+
+
 ## Project Setup
 
 ```sh
