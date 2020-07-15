@@ -1,0 +1,39 @@
+{
+  "name": "list-repos",
+  "description": "Show Your All GitHub Repositories",
+  "private": true,
+  "scripts": {
+    "start": "npm run serve",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "author": "Neo <neos21@gmail.com> (http://neo.s21.xrea.com/)",
+  "license": "MIT",
+  "homepage": "https://github.com/Neos21/list-repos#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neos21/list-repos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Neos21/list-repos/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/Neos21"
+  },
+  "dependencies": {
+    "core-js": "3.6.5",
+    "vue": "2.6.11",
+    "vue-class-component": "7.2.3",
+    "vue-property-decorator": "8.5.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "4.4.6",
+    "@vue/cli-plugin-typescript": "4.4.6",
+    "@vue/cli-service": "4.4.6",
+    "node-sass": "4.14.1",
+    "sass-loader": "8.0.2",
+    "typescript": "3.9.6",
+    "vue-template-compiler": "2.6.11"
+  }
+}
