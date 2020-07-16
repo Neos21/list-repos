@@ -3,7 +3,8 @@
     <h1>List Repos : Show Your All GitHub Repositories</h1>
     <form>
       <input type="text" v-model="user" placeholder="User Name">
-      <input type="submit" v-on:click.stop.prevent="fetch" v-bind:disabled="user == null || user.trim() === ''" value="Show">
+      <input type="submit" v-on:click.stop.prevent="fetch" v-bind:disabled="user == null || user.trim() === '' || user.trim().toLowerCase() === sort.user.toLowerCase()" value="Show">
+      <a v-show="sort.user" v-bind:href="'https://github.com/' + sort.user + '?tab=repositories'" target="_blank">{{ sort.user }}</a>
     </form>
     
     <p v-if="isProcessing" class="warning">Fetching...</p>
@@ -133,16 +134,15 @@ input {
   color: inherit;
   font-family: inherit;
   font-size: inherit;
-  vertical-align: top;
 }
 
 [type="text"] {
   padding: $item-padding-y $item-padding-x;
-  min-width: 15rem;
+  width: 12rem;
 }
 
 [type="submit"] {
-  margin-left: .5rem;
+  margin: 0 .75rem;
   padding: $item-padding-y .75rem;
   background: $item-background-colour;
   cursor: pointer;
@@ -150,6 +150,12 @@ input {
   
   &:hover {
     background: $item-background-hover-colour;
+  }
+  
+  &:disabled {
+    color: #929496;
+    background: #e2e4e6;
+    cursor: not-allowed;
   }
 }
 
@@ -212,7 +218,7 @@ small {
 }
 
 .monospace {
-  font-family: "Noto Sans Mono CJK JP", serif; //MeiryoKe_Gothic, Osaka-mono, "MS Gothic", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Noto Sans Mono CJK JP", MeiryoKe_Gothic, Osaka-mono, "MS Gothic", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .text-center { text-align: center; }
@@ -301,7 +307,7 @@ interface GitHubApiRepositories {
   /** link ヘッダの情報 */
   links?: Links;
   /** リポジトリ情報 */
-  repos : Array<object>;
+  repos: Array<object>;
 }
 
 /** アプリ */
@@ -319,6 +325,7 @@ export default class App extends Vue {
   
   /** ソート状況 : activeColumn にソート中のプロパティ名・各プロパティは true なら昇順・false なら降順とする */
   private sort: any = {
+    user             : '',
     activeColumn     : '',
     name             : null,
     homepage         : null,
@@ -343,13 +350,14 @@ export default class App extends Vue {
   /** GitHub API からリポジトリ一覧を取得する */
   private async fetch(): Promise<void> {
     try {
-      history.pushState(null, '', `?user=${this.user}`);
+      const user = this.user;
+      history.pushState(null, '', `?user=${user}`);
       this.isProcessing = true;
       this.errorMessage = '';
       this.repos        = [];
       
       const repos = [];
-      let url = `https://api.github.com/users/${this.user}/repos?per_page=100&page=1`;
+      let url = `https://api.github.com/users/${user}/repos?per_page=100&page=1`;
       while(url !== '') {
         const foundRepos = await fetchRepositories(url);
         repos.push(...foundRepos.repos);
@@ -359,6 +367,7 @@ export default class App extends Vue {
       // 通常名前の昇順で取得できるが、強制的にソートしておく
       this.repos = repos;
       this.sort  = {
+        user             : user,
         activeColumn     : '',
         name             : false,  // this.sortBy() で昇順になるよう、先に降順設定を与えておく
         homepage         : null,
