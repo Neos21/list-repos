@@ -16,29 +16,31 @@
         <thead>
           <tr>
             <th>No</th>
-            <th v-on:click.stop="sortBy('name'     , 'toString' )"><span class="hidden">■</span>Name<span    v-if="sort.activeColumn !== 'name'             " class="hidden">■</span><span v-if="sort.activeColumn === 'name'              && sort.name"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'name'              && !sort.name"              class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('homepage' , 'toBoolean')"><span class="hidden">■</span>HP<span      v-if="sort.activeColumn !== 'homepage'         " class="hidden">■</span><span v-if="sort.activeColumn === 'homepage'          && sort.homepage"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'homepage'          && !sort.homepage"          class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('clone_url', 'toBoolean')"><span class="hidden">■</span>Git<span     v-if="sort.activeColumn !== 'clone_url'        " class="hidden">■</span><span v-if="sort.activeColumn === 'clone_url'         && sort.clone_url"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'clone_url'         && !sort.clone_url"         class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('fork'     , 'toBoolean')"><span class="hidden">■</span>Fork<span    v-if="sort.activeColumn !== 'fork'             " class="hidden">■</span><span v-if="sort.activeColumn === 'fork'              && sort.fork"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'fork'              && !sort.fork"              class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('created_at'            )"><span class="hidden">■</span>Created<span v-if="sort.activeColumn !== 'created_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'created_at'        && sort.created_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'created_at'        && !sort.created_at"        class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span  v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('open_issues_count'     )"><span class="hidden">■</span>Issues<span  v-if="sort.activeColumn !== 'open_issues_count'" class="hidden">■</span><span v-if="sort.activeColumn === 'open_issues_count' && sort.open_issues_count" class="is-desc">▼</span><span v-if="sort.activeColumn === 'open_issues_count' && !sort.open_issues_count" class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('size'                  )"><span class="hidden">■</span>Size<span    v-if="sort.activeColumn !== 'size'             " class="hidden">■</span><span v-if="sort.activeColumn === 'size'              && sort.size"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'size'              && !sort.size"              class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('name'     , 'toString' )"><span class="hidden">■</span>Name<span     v-if="sort.activeColumn !== 'name'             " class="hidden">■</span><span v-if="sort.activeColumn === 'name'              && sort.name"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'name'              && !sort.name"              class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('homepage' , 'toBoolean')"><span class="hidden">■</span>HP<span       v-if="sort.activeColumn !== 'homepage'         " class="hidden">■</span><span v-if="sort.activeColumn === 'homepage'          && sort.homepage"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'homepage'          && !sort.homepage"          class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('clone_url', 'toBoolean')"><span class="hidden">■</span>Git<span      v-if="sort.activeColumn !== 'clone_url'        " class="hidden">■</span><span v-if="sort.activeColumn === 'clone_url'         && sort.clone_url"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'clone_url'         && !sort.clone_url"         class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('fork'     , 'toBoolean')"><span class="hidden">■</span>Fork<span     v-if="sort.activeColumn !== 'fork'             " class="hidden">■</span><span v-if="sort.activeColumn === 'fork'              && sort.fork"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'fork'              && !sort.fork"              class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('archived' , 'toBoolean')"><span class="hidden">■</span>Archived<span v-if="sort.activeColumn !== 'archived'         " class="hidden">■</span><span v-if="sort.activeColumn === 'archived'          && sort.archived"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'archived'          && !sort.archived"          class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('created_at'            )"><span class="hidden">■</span>Created<span  v-if="sort.activeColumn !== 'created_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'created_at'        && sort.created_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'created_at'        && !sort.created_at"        class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span  v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span   v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('open_issues_count'     )"><span class="hidden">■</span>Issues<span   v-if="sort.activeColumn !== 'open_issues_count'" class="hidden">■</span><span v-if="sort.activeColumn === 'open_issues_count' && sort.open_issues_count" class="is-desc">▼</span><span v-if="sort.activeColumn === 'open_issues_count' && !sort.open_issues_count" class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('size'                  )"><span class="hidden">■</span>Size<span     v-if="sort.activeColumn !== 'size'             " class="hidden">■</span><span v-if="sort.activeColumn === 'size'              && sort.size"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'size'              && !sort.size"              class="is-asc">▲</span></th>
           </tr>
         </thead>
         <tfoot>
           <tr>
             <th>No</th>
-            <th v-on:click.stop="sortBy('name'     , 'toString' )"><span class="hidden">■</span>Name<span    v-if="sort.activeColumn !== 'name'             " class="hidden">■</span><span v-if="sort.activeColumn === 'name'              && sort.name"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'name'              && !sort.name"              class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('homepage' , 'toBoolean')"><span class="hidden">■</span>HP<span      v-if="sort.activeColumn !== 'homepage'         " class="hidden">■</span><span v-if="sort.activeColumn === 'homepage'          && sort.homepage"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'homepage'          && !sort.homepage"          class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('clone_url', 'toBoolean')"><span class="hidden">■</span>Git<span     v-if="sort.activeColumn !== 'clone_url'        " class="hidden">■</span><span v-if="sort.activeColumn === 'clone_url'         && sort.clone_url"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'clone_url'         && !sort.clone_url"         class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('fork'     , 'toBoolean')"><span class="hidden">■</span>Fork<span    v-if="sort.activeColumn !== 'fork'             " class="hidden">■</span><span v-if="sort.activeColumn === 'fork'              && sort.fork"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'fork'              && !sort.fork"              class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('created_at'            )"><span class="hidden">■</span>Created<span v-if="sort.activeColumn !== 'created_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'created_at'        && sort.created_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'created_at'        && !sort.created_at"        class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span  v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('open_issues_count'     )"><span class="hidden">■</span>Issues<span  v-if="sort.activeColumn !== 'open_issues_count'" class="hidden">■</span><span v-if="sort.activeColumn === 'open_issues_count' && sort.open_issues_count" class="is-desc">▼</span><span v-if="sort.activeColumn === 'open_issues_count' && !sort.open_issues_count" class="is-asc">▲</span></th>
-            <th v-on:click.stop="sortBy('size'                  )"><span class="hidden">■</span>Size<span    v-if="sort.activeColumn !== 'size'             " class="hidden">■</span><span v-if="sort.activeColumn === 'size'              && sort.size"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'size'              && !sort.size"              class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('name'     , 'toString' )"><span class="hidden">■</span>Name<span     v-if="sort.activeColumn !== 'name'             " class="hidden">■</span><span v-if="sort.activeColumn === 'name'              && sort.name"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'name'              && !sort.name"              class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('homepage' , 'toBoolean')"><span class="hidden">■</span>HP<span       v-if="sort.activeColumn !== 'homepage'         " class="hidden">■</span><span v-if="sort.activeColumn === 'homepage'          && sort.homepage"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'homepage'          && !sort.homepage"          class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('clone_url', 'toBoolean')"><span class="hidden">■</span>Git<span      v-if="sort.activeColumn !== 'clone_url'        " class="hidden">■</span><span v-if="sort.activeColumn === 'clone_url'         && sort.clone_url"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'clone_url'         && !sort.clone_url"         class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('fork'     , 'toBoolean')"><span class="hidden">■</span>Fork<span     v-if="sort.activeColumn !== 'fork'             " class="hidden">■</span><span v-if="sort.activeColumn === 'fork'              && sort.fork"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'fork'              && !sort.fork"              class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('archived' , 'toBoolean')"><span class="hidden">■</span>Archived<span v-if="sort.activeColumn !== 'archived'         " class="hidden">■</span><span v-if="sort.activeColumn === 'archived'          && sort.archived"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'archived'          && !sort.archived"          class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('created_at'            )"><span class="hidden">■</span>Created<span  v-if="sort.activeColumn !== 'created_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'created_at'        && sort.created_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'created_at'        && !sort.created_at"        class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span  v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span   v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('open_issues_count'     )"><span class="hidden">■</span>Issues<span   v-if="sort.activeColumn !== 'open_issues_count'" class="hidden">■</span><span v-if="sort.activeColumn === 'open_issues_count' && sort.open_issues_count" class="is-desc">▼</span><span v-if="sort.activeColumn === 'open_issues_count' && !sort.open_issues_count" class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('size'                  )"><span class="hidden">■</span>Size<span     v-if="sort.activeColumn !== 'size'             " class="hidden">■</span><span v-if="sort.activeColumn === 'size'              && sort.size"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'size'              && !sort.size"              class="is-asc">▲</span></th>
           </tr>
         </tfoot>
         <tbody>
@@ -48,6 +50,7 @@
             <td class="text-center"><a v-if="repo.homepage" v-bind:href="repo.homepage" target="_blank">○</a><span v-else>-</span></td>
             <td class="text-center"><a v-bind:href="repo.clone_url" target="_blank">■</a></td>
             <td class="text-center"><template v-if="repo.fork">○</template><template v-else>-</template></td>
+            <td class="text-center"><template v-if="repo.archived">○</template><template v-else>-</template></td>
             <td v-bind:title="repo.created_at" class="monospace text-center">{{ repo.created_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.updated_at" class="monospace text-center">{{ repo.updated_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.pushed_at" class="monospace text-center">{{ repo.pushed_at.slice(0, 10) }}</td>
@@ -58,7 +61,7 @@
       </table>
     </div>
     
-    <footer>Author : <a href="http://neo.s21.xrea.com/" target="_blank">Neo</a> (<a href="https://github.com/Neos21/list-repos" target="_blank">GitHub</a>)</footer>
+    <footer>Author : <a href="https://neos21.net/" target="_blank">Neo</a> (<a href="https://github.com/Neos21/list-repos" target="_blank">GitHub</a>)</footer>
   </div>
 </template>
 
@@ -218,7 +221,7 @@ small {
 }
 
 .monospace {
-  font-family: "Noto Sans Mono CJK JP", MeiryoKe_Gothic, Osaka-mono, "MS Gothic", "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: "Noto Sans Mono CJK JP", Osaka-mono, "MS Gothic", Menlo, Consolas, Courier, "Courier New", monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 .text-center { text-align: center; }
@@ -331,6 +334,7 @@ export default class App extends Vue {
     homepage         : null,
     clone_url        : null,
     fork             : null,
+    archived         : null,
     created_at       : null,
     updated_at       : null,
     pushed_at        : null,
@@ -373,6 +377,7 @@ export default class App extends Vue {
         homepage         : null,
         clone_url        : null,
         fork             : null,
+        archived         : null,
         created_at       : null,
         updated_at       : null,
         pushed_at        : null,
