@@ -56,8 +56,8 @@
             <td v-bind:title="repo.created_at" class="monospace text-center">{{ repo.created_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.updated_at" class="monospace text-center">{{ repo.updated_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.pushed_at"  class="monospace text-center">{{ repo.pushed_at .slice(0, 10) }}</td>
-            <td class="text-right"><a v-bind:href="repo.html_url + '/issues'" target="_blank">{{ String(repo.open_issues_count).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</a></td>
-            <td class="text-right"><a v-bind:href="repo.stargazers_url"       target="_blank">{{ String(repo.stargazers_count ).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</a></td>
+            <td class="text-right"><a v-bind:href="repo.html_url + '/issues'"     target="_blank">{{ String(repo.open_issues_count).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</a></td>
+            <td class="text-right"><a v-bind:href="repo.html_url + '/stargazers'" target="_blank">{{ String(repo.stargazers_count ).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</a></td>
             <td class="monospace text-right">{{ String(repo.size).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}<small>&nbsp;kb</small></td>
           </tr>
         </tbody>
