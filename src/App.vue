@@ -25,6 +25,7 @@
             <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span  v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span   v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('open_issues_count'     )"><span class="hidden">■</span>Issues<span   v-if="sort.activeColumn !== 'open_issues_count'" class="hidden">■</span><span v-if="sort.activeColumn === 'open_issues_count' && sort.open_issues_count" class="is-desc">▼</span><span v-if="sort.activeColumn === 'open_issues_count' && !sort.open_issues_count" class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('stargazers_count'      )"><span class="hidden">■</span>Stars<span    v-if="sort.activeColumn !== 'stargazers_count' " class="hidden">■</span><span v-if="sort.activeColumn === 'stargazers_count'  && sort.stargazers_count"  class="is-desc">▼</span><span v-if="sort.activeColumn === 'stargazers_count'  && !sort.stargazers_count"  class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('size'                  )"><span class="hidden">■</span>Size<span     v-if="sort.activeColumn !== 'size'             " class="hidden">■</span><span v-if="sort.activeColumn === 'size'              && sort.size"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'size'              && !sort.size"              class="is-asc">▲</span></th>
           </tr>
         </thead>
@@ -40,6 +41,7 @@
             <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span  v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span   v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('open_issues_count'     )"><span class="hidden">■</span>Issues<span   v-if="sort.activeColumn !== 'open_issues_count'" class="hidden">■</span><span v-if="sort.activeColumn === 'open_issues_count' && sort.open_issues_count" class="is-desc">▼</span><span v-if="sort.activeColumn === 'open_issues_count' && !sort.open_issues_count" class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('stargazers_count'      )"><span class="hidden">■</span>Stars<span    v-if="sort.activeColumn !== 'stargazers_count' " class="hidden">■</span><span v-if="sort.activeColumn === 'stargazers_count'  && sort.stargazers_count"  class="is-desc">▼</span><span v-if="sort.activeColumn === 'stargazers_count'  && !sort.stargazers_count"  class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('size'                  )"><span class="hidden">■</span>Size<span     v-if="sort.activeColumn !== 'size'             " class="hidden">■</span><span v-if="sort.activeColumn === 'size'              && sort.size"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'size'              && !sort.size"              class="is-asc">▲</span></th>
           </tr>
         </tfoot>
@@ -47,14 +49,15 @@
           <tr v-for="(repo, index) in repos" v-bind:key="repo.id">
             <td class="monospace text-right">{{ String(index + 1).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</td>
             <td><a v-bind:href="repo.html_url" target="_blank" v-bind:title="repo.description">{{ repo.name }}</a></td>
-            <td class="text-center"><a v-if="repo.homepage" v-bind:href="repo.homepage" target="_blank">○</a><span v-else>-</span></td>
-            <td class="text-center"><a v-bind:href="repo.clone_url" target="_blank">■</a></td>
-            <td class="text-center"><template v-if="repo.fork">○</template><template v-else>-</template></td>
+            <td class="text-center"><a v-if="repo.homepage" v-bind:href="repo.homepage"  v-bind:title="repo.homepage" target="_blank">○</a><span v-else>-</span></td>
+            <td class="text-center"><a                      v-bind:href="repo.clone_url"                              target="_blank">■</a></td>
+            <td class="text-center"><template v-if="repo.fork"    >○</template><template v-else>-</template></td>
             <td class="text-center"><template v-if="repo.archived">○</template><template v-else>-</template></td>
             <td v-bind:title="repo.created_at" class="monospace text-center">{{ repo.created_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.updated_at" class="monospace text-center">{{ repo.updated_at.slice(0, 10) }}</td>
-            <td v-bind:title="repo.pushed_at" class="monospace text-center">{{ repo.pushed_at.slice(0, 10) }}</td>
+            <td v-bind:title="repo.pushed_at"  class="monospace text-center">{{ repo.pushed_at .slice(0, 10) }}</td>
             <td class="text-right"><a v-bind:href="repo.html_url + '/issues'" target="_blank">{{ String(repo.open_issues_count).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</a></td>
+            <td class="text-right"><a v-bind:href="repo.stargazers_url"       target="_blank">{{ String(repo.stargazers_count ).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}</a></td>
             <td class="monospace text-right">{{ String(repo.size).replace((/(\d)(?=(\d\d\d)+(?!\d))/gu), '$1,') }}<small>&nbsp;kb</small></td>
           </tr>
         </tbody>
@@ -339,6 +342,7 @@ export default class App extends Vue {
     updated_at       : null,
     pushed_at        : null,
     open_issues_count: null,
+    stargazers_count : null,
     size             : null
   };
   
@@ -367,6 +371,7 @@ export default class App extends Vue {
         repos.push(...foundRepos.repos);
         url = foundRepos.links && foundRepos.links.next ? foundRepos.links.next : '';
       }
+      console.log(repos);  // For Debug
       
       // 通常名前の昇順で取得できるが、強制的にソートしておく
       this.repos = repos;
@@ -382,6 +387,7 @@ export default class App extends Vue {
         updated_at       : null,
         pushed_at        : null,
         open_issues_count: null,
+        stargazers_count : null,
         size             : null
       };
       this.sortBy('name', 'toString');
