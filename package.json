@@ -31,9 +31,12 @@
     "@vue/cli-plugin-babel": "4.4.6",
     "@vue/cli-plugin-typescript": "4.4.6",
     "@vue/cli-service": "4.4.6",
-    "node-sass": "4.14.1",
-    "sass-loader": "8.0.2",
     "typescript": "3.9.6",
     "vue-template-compiler": "2.6.11"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }

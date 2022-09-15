@@ -21,6 +21,7 @@
             <th v-on:click.stop="sortBy('clone_url', 'toBoolean')"><span class="hidden">■</span>Git<span      v-if="sort.activeColumn !== 'clone_url'        " class="hidden">■</span><span v-if="sort.activeColumn === 'clone_url'         && sort.clone_url"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'clone_url'         && !sort.clone_url"         class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('fork'     , 'toBoolean')"><span class="hidden">■</span>Fork<span     v-if="sort.activeColumn !== 'fork'             " class="hidden">■</span><span v-if="sort.activeColumn === 'fork'              && sort.fork"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'fork'              && !sort.fork"              class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('archived' , 'toBoolean')"><span class="hidden">■</span>Archived<span v-if="sort.activeColumn !== 'archived'         " class="hidden">■</span><span v-if="sort.activeColumn === 'archived'          && sort.archived"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'archived'          && !sort.archived"          class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('language' , 'toString' )"><span class="hidden">■</span>Language<span v-if="sort.activeColumn !== 'language'         " class="hidden">■</span><span v-if="sort.activeColumn === 'language'          && sort.language"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'language'          && !sort.language"          class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('created_at'            )"><span class="hidden">■</span>Created<span  v-if="sort.activeColumn !== 'created_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'created_at'        && sort.created_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'created_at'        && !sort.created_at"        class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span  v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span   v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
@@ -38,6 +39,7 @@
             <th v-on:click.stop="sortBy('clone_url', 'toBoolean')"><span class="hidden">■</span>Git<span      v-if="sort.activeColumn !== 'clone_url'        " class="hidden">■</span><span v-if="sort.activeColumn === 'clone_url'         && sort.clone_url"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'clone_url'         && !sort.clone_url"         class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('fork'     , 'toBoolean')"><span class="hidden">■</span>Fork<span     v-if="sort.activeColumn !== 'fork'             " class="hidden">■</span><span v-if="sort.activeColumn === 'fork'              && sort.fork"              class="is-desc">▼</span><span v-if="sort.activeColumn === 'fork'              && !sort.fork"              class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('archived' , 'toBoolean')"><span class="hidden">■</span>Archived<span v-if="sort.activeColumn !== 'archived'         " class="hidden">■</span><span v-if="sort.activeColumn === 'archived'          && sort.archived"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'archived'          && !sort.archived"          class="is-asc">▲</span></th>
+            <th v-on:click.stop="sortBy('language' , 'toString' )"><span class="hidden">■</span>Language<span v-if="sort.activeColumn !== 'language'         " class="hidden">■</span><span v-if="sort.activeColumn === 'language'          && sort.language"          class="is-desc">▼</span><span v-if="sort.activeColumn === 'language'          && !sort.language"          class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('created_at'            )"><span class="hidden">■</span>Created<span  v-if="sort.activeColumn !== 'created_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'created_at'        && sort.created_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'created_at'        && !sort.created_at"        class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('updated_at'            )"><span class="hidden">■</span>Updated<span  v-if="sort.activeColumn !== 'updated_at'       " class="hidden">■</span><span v-if="sort.activeColumn === 'updated_at'        && sort.updated_at"        class="is-desc">▼</span><span v-if="sort.activeColumn === 'updated_at'        && !sort.updated_at"        class="is-asc">▲</span></th>
             <th v-on:click.stop="sortBy('pushed_at'             )"><span class="hidden">■</span>Pushed<span   v-if="sort.activeColumn !== 'pushed_at'        " class="hidden">■</span><span v-if="sort.activeColumn === 'pushed_at'         && sort.pushed_at"         class="is-desc">▼</span><span v-if="sort.activeColumn === 'pushed_at'         && !sort.pushed_at"         class="is-asc">▲</span></th>
@@ -55,6 +57,7 @@
             <td class="text-center"><a                      v-bind:href="repo.clone_url"                              target="_blank">■</a></td>
             <td class="text-center"><a v-bind:href="repo.html_url + '/network/members'" target="_blank"><template v-if="repo.fork">○</template><template v-else>-</template></a></td>
             <td class="text-center"><template v-if="repo.archived">○</template><template v-else>-</template></td>
+            <td><span class="language-icon" v-bind:style="'background:' + getColour(repo.language)"></span><span class="language-name">{{ repo.language || '-' }}</span></td>
             <td v-bind:title="repo.created_at" class="monospace text-center">{{ repo.created_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.updated_at" class="monospace text-center">{{ repo.updated_at.slice(0, 10) }}</td>
             <td v-bind:title="repo.pushed_at"  class="monospace text-center">{{ repo.pushed_at .slice(0, 10) }}</td>
@@ -71,13 +74,15 @@
   </div>
 </template>
 
-<style lang="scss">
-$margin: 1rem;
-$item-border-colour          : #d2d4d6;
-$item-background-colour      : #f2f4f6;
-$item-background-hover-colour: #eceef0;
-$item-padding-y: .25rem;
-$item-padding-x: .5rem;
+<style>
+:root {
+  --margin: 1rem;
+  --item-border-colour          : #d2d4d6;
+  --item-background-colour      : #f2f4f6;
+  --item-background-hover-colour: #eceef0;
+  --item-padding-y: .25rem;
+  --item-padding-x: .5rem;
+}
 
 @font-face {
   font-family: "Yu Gothic";
@@ -105,26 +110,26 @@ html {
 }
 
 body {
-  margin: $margin;
+  margin: var(--margin);
   line-height: 1;
   color: #020406;
   background: #fdfeff;
   overflow-wrap: break-word;
       word-wrap: break-word;
-  
-  @media (max-width: 575.98px) {
-    word-break: break-all;
-  }
 }
+  @media (max-width: 575.98px) {
+    body {
+      word-break: break-all;
+    }
+  }
 
 a {
   color: #07f;
   text-decoration: none;
-  
-  &:hover {
+}
+  a:hover {
     text-decoration: underline;
   }
-}
 
 h1 {
   margin: 0;
@@ -132,13 +137,13 @@ h1 {
 }
 
 form {
-  margin: $margin 0;
+  margin: var(--margin) 0;
   white-space: nowrap;
 }
 
 input {
   margin: 0;
-  border: 1px solid $item-border-colour;
+  border: 1px solid var(--item-border-colour);
   border-radius: 4px;
   color: inherit;
   font-family: inherit;
@@ -146,30 +151,28 @@ input {
 }
 
 [type="text"] {
-  padding: $item-padding-y $item-padding-x;
+  padding: var(--item-padding-y) var(--item-padding-x);
   width: 12rem;
 }
 
 [type="submit"] {
   margin: 0 .75rem;
-  padding: $item-padding-y .75rem;
-  background: $item-background-colour;
+  padding: var(--item-padding-y) .75rem;
+  background: var(--item-background-colour);
   cursor: pointer;
   -webkit-appearance: button;
-  
-  &:hover {
-    background: $item-background-hover-colour;
+}
+  [type="submit"]:hover {
+    background: var(--item-background-hover-colour);
   }
-  
-  &:disabled {
+  [type="submit"]:disabled {
     color: #929496;
     background: #e2e4e6;
     cursor: not-allowed;
   }
-}
 
 p {
-  margin: $margin 0;
+  margin: var(--margin) 0;
   font-weight: bold;
 }
 
@@ -186,44 +189,56 @@ tr:hover, tr:focus {
 }
 
 th {
-  border: 1px solid $item-border-colour;
-  padding: $item-padding-y 0;
+  border: 1px solid var(--item-border-colour);
+  padding: var(--item-padding-y) 0;
   text-align: center;
   font-weight: bold;
-  background: $item-background-colour;
+  background: var(--item-background-colour);
   white-space: nowrap;
-  
-  &:hover, &:focus {
-    background: $item-background-hover-colour;
+}
+  th:hover, th:focus {
+    background: var(--item-background-hover-colour);
   }
   
-  // No 列のみソートが効かないので余白を調整
-  &:first-child {
-    padding: $item-padding-y $item-padding-x;
+  /* No 列のみソートが効かないので余白を調整 */
+  th:first-child {
+    padding: var(--item-padding-y) var(--item-padding-x);
   }
   
-  &:not(:first-child) {
+  th:not(:first-child) {
     cursor: pointer;
   }
   
-  // アイコン
-  span {
+  /* アイコン */
+  th span {
     display: inline-block;
     width: 1.1rem;
     color: #909294;
     font-size: .8rem;
     text-align: center;
   }
-}
 
 td {
-  border: 1px solid $item-border-colour;
-  padding: $item-padding-y $item-padding-x;
+  border: 1px solid var(--item-border-colour);
+  padding: var(--item-padding-y) var(--item-padding-x);
   white-space: nowrap;
 }
 
 small {
   font-size: .8rem;
+}
+
+.language-icon {
+  display: inline-block;
+  margin-right: .3rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #666;  /* Default */
+}
+
+.language-name {
+  font-size: .9rem;
 }
 
 .monospace {
@@ -237,15 +252,17 @@ small {
 .hidden { visibility: hidden; }
 
 footer {
-  margin: ($margin * 2) 0 $margin;
-  border-top: 1px solid $item-border-colour;
-  padding-top: $margin;
+  margin: calc(var(--margin) * 2) 0 var(--margin);
+  border-top: 1px solid var(--item-border-colour);
+  padding-top: var(--margin);
   font-size: .9rem;
 }
 </style>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+
+import colours from './colours.json';
 
 /**
  * クエリ文字列をオブジェクトにパースする
@@ -341,6 +358,7 @@ export default class App extends Vue {
     clone_url        : null,
     fork             : null,
     archived         : null,
+    language         : null,
     created_at       : null,
     updated_at       : null,
     pushed_at        : null,
@@ -387,6 +405,7 @@ export default class App extends Vue {
         clone_url        : null,
         fork             : null,
         archived         : null,
+        language         : null,
         created_at       : null,
         updated_at       : null,
         pushed_at        : null,
@@ -418,9 +437,9 @@ export default class App extends Vue {
     this.repos.sort((a: any, b: any) => {
       let aProperty = a[propertyName];
       let bProperty = b[propertyName];
-      if(mode === 'toString') {
-        aProperty = aProperty.toLowerCase();
-        bProperty = bProperty.toLowerCase();
+      if(mode === 'toString') {  // null・undefined 対策
+        aProperty = (aProperty ?? '').toLowerCase();
+        bProperty = (bProperty ?? '').toLowerCase();
       }
       else if(mode === 'toBoolean') {
         aProperty = Boolean(aProperty);
@@ -437,6 +456,26 @@ export default class App extends Vue {
       }
       return 0;
     });
+  }
+  
+  /**
+   * プログラミング言語名を基にカラーコードを返す
+   * 
+   * `import` している `colours.json` は以下の URL より取得・整形したモノ
+   * `{ "言語名": "#カラーコード" }` となっているのでカラーコードを取得できたらそれを返す
+   * カラーコードが取得できなかった場合は空値とし、`.language-icon` のデフォルトカラーで表示させる
+   * 
+   * - https://github.com/ozh/github-colors/blob/master/colors.json
+   * - https://raw.githubusercontent.com/ozh/github-colors/master/colors.json
+   * 
+   * @param languageName プログラミング言語名
+   * @return カラーコード・見つからなければ空文字
+   */
+  private getColour(languageName?: string): string {
+    if(languageName == null) return '';
+    const colour = (colours as any)[languageName];
+    if(colour == null) return '';
+    return colour;
   }
 }
 </script>
