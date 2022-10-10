@@ -2,30 +2,28 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": [
-      "webpack-env"
-    ],
-    "paths": {
-      "@/*": [
-        "src/*"
-      ]
-    },
     "lib": [
       "esnext",
       "dom",
       "dom.iterable",
       "scripthost"
-    ]
+    ],
+    "types": [
+      "webpack-env"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "strict"                      : true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop"             : true,
+    "experimentalDecorators"      : true,
+    "importHelpers"               : true,
+    "jsx"                         : "preserve",
+    "resolveJsonModule"           : true,
+    "sourceMap"                   : false
   },
   "include": [
     "src/**/*.ts",

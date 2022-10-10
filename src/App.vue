@@ -2,16 +2,19 @@
   <div id="app">
     <h1>List Repos : Show Your All GitHub Repositories</h1>
     <form>
-      <input type="text" v-model="user" placeholder="User Name">
-      <input type="submit" v-on:click.stop.prevent="fetch" v-bind:disabled="user == null || user.trim() === '' || user.trim().toLowerCase() === sort.user.toLowerCase()" value="Show">
+      <input type="text" v-model="user" placeholder="User Name" v-bind:disabled="isProcessing">
+      <input type="submit" v-on:click.stop.prevent="fetch" v-bind:disabled="isProcessing || user == null || user.trim() === ''" value="Show">
       <a v-show="sort.user" v-bind:href="'https://github.com/' + sort.user + '?tab=repositories'" target="_blank">{{ sort.user }}</a>
+      <input type="text" v-model="token" placeholder="GitHub Token" v-bind:disabled="isProcessing">
+      <small v-show="rate" v-bind:title="allRateInfo">{{ rate }}</small>
     </form>
     
     <p v-if="isProcessing" class="warning">Fetching...</p>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     
-    <p v-if="!isProcessing && !errorMessage && (!repos || !repos.length)" class="warning">Repository Not Found.</p>
-    <div v-if="!isProcessing && !errorMessage && repos && repos.length" class="table-wrapper">
+    <!-- エラー時も表示する -->
+    <p v-if="!isProcessing && (!repos || !repos.length)" class="warning">Repository Not Found.</p>
+    <div v-if="!isProcessing && repos && repos.length" class="table-wrapper">
       <table>
         <thead>
           <tr>
@@ -84,26 +87,17 @@
   --item-padding-x: .5rem;
 }
 
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Medium"), local("YuGothic-Medium");
-}
-
-@font-face {
-  font-family: "Yu Gothic";
-  src: local("Yu Gothic Bold"), local("YuGothic-Bold");
-  font-weight: bold;
-}
-
-*, ::before, ::after {
-  box-sizing: border-box;
-}
-
+*, ::before, ::after { box-sizing: border-box; }
+@font-face { font-family: "Yu Gothic"; src: local("Yu Gothic Medium"), local("YuGothic-Medium");                    }
+@font-face { font-family: "Yu Gothic"; src: local("Yu Gothic Bold"  ), local("YuGothic-Bold"  ); font-weight: bold; }
 html {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "Noto Sans CJK JP", YuGothic, "Yu Gothic", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   overflow-y: scroll;
-  cursor: default;
+  color: #020406;
   text-decoration-skip-ink: none;
+  line-height: 1;
+  background: #fdfeff;
+  cursor: default;
   -webkit-text-size-adjust: 100%;
   -webkit-text-decoration-skip: objects;
   -webkit-overflow-scrolling: touch;
@@ -111,9 +105,6 @@ html {
 
 body {
   margin: var(--margin);
-  line-height: 1;
-  color: #020406;
-  background: #fdfeff;
   overflow-wrap: break-word;
       word-wrap: break-word;
 }
@@ -139,7 +130,16 @@ h1 {
 form {
   margin: var(--margin) 0;
   white-space: nowrap;
+  overflow-x: auto;
 }
+  form > *:not(:last-child) {
+    margin-right: .75rem;
+  }
+  /* レート制限表示 (ツールチップで全情報表示) */
+  form > small:hover {
+    text-decoration: underline;
+    cursor: help;
+  }
 
 input {
   margin: 0;
@@ -149,14 +149,20 @@ input {
   font-family: inherit;
   font-size: inherit;
 }
+  input:disabled {
+    cursor: not-allowed;
+  }
 
 [type="text"] {
   padding: var(--item-padding-y) var(--item-padding-x);
   width: 12rem;
 }
+  [type="text"]:disabled {
+    color: #495057;
+    background: #e9ecef;
+  }
 
 [type="submit"] {
-  margin: 0 .75rem;
   padding: var(--item-padding-y) .75rem;
   background: var(--item-background-colour);
   cursor: pointer;
@@ -168,7 +174,6 @@ input {
   [type="submit"]:disabled {
     color: #929496;
     background: #e2e4e6;
-    cursor: not-allowed;
   }
 
 p {
@@ -200,7 +205,7 @@ th {
     background: var(--item-background-hover-colour);
   }
   
-  /* No 列のみソートが効かないので余白を調整 */
+  /* No 列のみソートが効かないので余白を調整する */
   th:first-child {
     padding: var(--item-padding-y) var(--item-padding-x);
   }
@@ -252,7 +257,7 @@ small {
 .hidden { visibility: hidden; }
 
 footer {
-  margin: calc(var(--margin) * 2) 0 var(--margin);
+  margin: calc(var(--margin) * 2) 0;
   border-top: 1px solid var(--item-border-colour);
   padding-top: var(--margin);
   font-size: .9rem;
@@ -267,53 +272,82 @@ import colours from './colours.json';
 /**
  * クエリ文字列をオブジェクトにパースする
  * 
- * @param locationSearch location.search を渡す
+ * @param locationSearch `location.search` を渡す
  * @return クエリの連想配列
  */
-const parseQueryString = (locationSearch: string): { [key: string]: string | null } => {
-  if(typeof locationSearch !== 'string' || locationSearch === '') { return {}; }
-  return locationSearch.replace((/^\?/u), '').split('&').reduce((obj: { [key: string]: string | null }, param: string) => {
+const parseQueryString = (locationSearch: string): { [key: string]: string } => {
+  if(typeof locationSearch !== 'string' || locationSearch === '') return {};
+  return locationSearch.replace((/^\?/u), '').split('&').reduce((obj: { [key: string]: string }, param: string) => {
     const [key, value] = param.split('=');
-    obj[key] = value || null;
+    obj[key] = value;
     return obj;
   }, {});
 };
 
 /**
- * GitHub API が返す link ヘッダをパースする
+ * GitHub API が返す `link` ヘッダをパースする
  * 
- * @param link link ヘッダの文字列
+ * @param link `link` ヘッダの文字列
  * @return リンクの連想配列 (キーが 'first'・'prev'・'next'・'last' のいずれか、値が API URL となる)
  */
 const parseLinks = (link: string | null): Links => {
-  if(typeof link !== 'string' || link === '') { return {}; }
+  if(link == null || typeof link !== 'string' || link === '') return {};
   return link.split(', ').reduce((links: { [key: string]: string }, part: string) => {
     const match = part.match('<(.*?)>; rel="(.*?)"');
-    if(match && match.length === 3) {
-      links[match[2]] = match[1];  // ex. 'next': https://api.github.com/user/00000000/repos?per_page=100&page=2
-    }
+    if(match && match.length === 3) links[match[2]] = match[1];  // ex. 'next': https://api.github.com/user/00000000/repos?per_page=100&page=2
     return links;
   }, {});
 };
 
 /**
- * window.fetch() でリポジトリ情報を取得し結果を返す
+ * GitHub Token の有無に応じて `window.fetch` の第2引数用のオブジェクトを組み立てる
+ * 
+ * @param token GitHub Token
+ * @return GitHub Token がない場合は `undefined`、あれば `headers.Authorization` オプションを持つ連想配列
+ */
+const convertToFetchOptions = (token?: string): { headers: { Authorization: string } } | undefined => (token == null || token.trim() === '')
+  ? undefined
+  : { headers: { Authorization: `Bearer ${token}` } };
+
+/**
+ * `window.fetch()` でリポジトリ情報を取得し結果を返す
  * 
  * @param url GitHub API URL
- * @return link ヘッダの内容と取得できたリポジトリ情報の配列をまとめたオブジェクト
+ * @param token GitHub Token
+ * @return `link` ヘッダの内容と取得できたリポジトリ情報の配列をまとめたオブジェクト
  * @throws API コールに失敗した場合に例外をスローする
  */
-const fetchRepositories = async (url: string): Promise<GitHubApiRepositories> => {
-  const response = await fetch(url);  // .ok = true, .status = 200, .statusText = 'OK'
+const fetchRepositories = async (url: string, token?: string): Promise<GitHubApiRepositories> => {
+  const options = convertToFetchOptions(token);
+  const response = await fetch(url, options);  // .ok = true, .status = 200, .statusText = 'OK'
   if(!response.ok) {  // 例外は自動的にはスローされない
-    console.warn('Response NG', response);
+    console.warn('fetchRepositories : Response NG', response);
     throw new Error(`${response.status} : ${response.statusText}`);
   }
-  const link = response.headers.get('link');
+  const link = response.headers.get('link');  // `string | null`
   const links: Links = parseLinks(link);
   const repos: Array<object> = await response.json();
   const gitHubApiRepositories: GitHubApiRepositories = { links, repos };
   return gitHubApiRepositories;
+};
+
+/**
+ * `window.fetch()` で GitHub API のコールレート情報を取得し結果を返す
+ * 
+ * @param token GitHub Token
+ * @return コールレート情報の結果オブジェクト
+ * @throws API コールに失敗した場合に例外をスローする
+ */
+const fetchRateLimit = async (token?: string): Promise<GitHubApiRateLimit> => {
+  const options = convertToFetchOptions(token);
+  const response = await fetch('https://api.github.com/rate_limit', options);
+  if(!response.ok) {
+    console.warn('fetchRateLimit : Response NG', response);
+    throw new Error(`${response.status} : ${response.statusText}`);
+  }
+  const jsonResponse = await response.json();
+  const rate: GitHubApiRateLimit = jsonResponse.rate;
+  return rate;
 };
 
 /** リンクのインターフェース */
@@ -330,10 +364,18 @@ interface Links {
 
 /** GitHub API で取得したリポジトリの配列のインターフェース */
 interface GitHubApiRepositories {
-  /** link ヘッダの情報 */
+  /** `link` ヘッダの情報 */
   links?: Links;
   /** リポジトリ情報 */
   repos: Array<object>;
+}
+
+/** GitHub API で取得したレートリミットのインターフェース */
+interface GitHubApiRateLimit {
+  limit?    : number;
+  used?     : number;
+  remaining?: number;
+  reset?    : number;
 }
 
 /** アプリ */
@@ -341,15 +383,22 @@ interface GitHubApiRepositories {
 export default class App extends Vue {
   /** ユーザ名 */
   private user: string = 'Neos21';
+  /** GitHub Token */
+  private token: string = '';
   /** リポジトリ情報 */
   private repos: Array<object> = [];
+  
+  /** API コールレート制限 (値がある場合は `remaining / limit` の形式で表示する) */
+  private rate: string = '';
+  /** API コールレートの全ての情報 (ツールチップ表示用) */
+  private allRateInfo: string = '';
   
   /** 処理中かどうか */
   private isProcessing: boolean = false;
   /** エラーメッセージ */
   private errorMessage: string = '';
   
-  /** ソート状況 : activeColumn にソート中のプロパティ名・各プロパティは true なら昇順・false なら降順とする */
+  /** ソート状況 : `activeColumn` にソート中のプロパティ名・各プロパティは `true` なら昇順・`false` なら降順とする */
   private sort: any = {
     user             : '',
     activeColumn     : '',
@@ -368,53 +417,83 @@ export default class App extends Vue {
     size             : null
   };
   
-  /** 画面初期表示時 : クエリ文字列でユーザ名が指定されていたらそれを初期設定する */
+  /** 画面初期表示時 : クエリ文字列でユーザ名や GitHub Token が指定されていたらそれを初期設定する */
   private async mounted(): Promise<void> {
     const params = parseQueryString(location.search);
-    if(params.user) {
-      this.user = params.user;
-    }
+    if(params.user ) this.user  = params.user;
+    if(params.token) this.token = params.token;
     await this.fetch();
   }
   
   /** GitHub API からリポジトリ一覧を取得する */
   private async fetch(): Promise<void> {
     try {
-      const user = this.user;
-      history.pushState(null, '', `?user=${user}`);
+      const user  = this.user;
+      const token = this.token;
+      history.pushState(null, '', `?user=${user}${token ? '&token=' + token : ''}`);
       this.isProcessing = true;
       this.errorMessage = '';
       this.repos        = [];
       
       const repos = [];
-      let url = `https://api.github.com/users/${user}/repos?per_page=100&page=1`;
-      while(url !== '') {
-        const foundRepos = await fetchRepositories(url);
-        repos.push(...foundRepos.repos);
-        url = foundRepos.links && foundRepos.links.next ? foundRepos.links.next : '';
+      let pageNumber = 1;
+      try {
+        let url = `https://api.github.com/users/${user}/repos?per_page=100&page=1`;
+        while(url !== '') {
+          const foundRepos = await fetchRepositories(url, token);  // Throws
+          console.log(`[${new Date().toISOString()}] Fetching : [Page ${pageNumber}] [${foundRepos.repos.length} Repos] [${foundRepos.links && foundRepos.links.next ? 'Has Next' : 'End'}]`);
+          repos.push(...foundRepos.repos);
+          url = foundRepos.links && foundRepos.links.next ? foundRepos.links.next : '';
+          pageNumber++;
+        }
       }
-      console.log(repos);  // For Debug
-      
-      // 通常名前の昇順で取得できるが、強制的にソートしておく
-      this.repos = repos;
-      this.sort  = {
-        user             : user,
-        activeColumn     : '',
-        name             : false,  // this.sortBy() で昇順になるよう、先に降順設定を与えておく
-        homepage         : null,
-        clone_url        : null,
-        fork             : null,
-        archived         : null,
-        language         : null,
-        created_at       : null,
-        updated_at       : null,
-        pushed_at        : null,
-        open_issues_count: null,
-        stargazers_count : null,
-        forks_count      : null,
-        size             : null
-      };
-      this.sortBy('name', 'toString');
+      catch(fetchRepositoriesError) {
+        console.warn('Error Has Occurred In Fetch Repositories Loop', fetchRepositoriesError);
+        throw fetchRepositoriesError;  // 以下の `finally` を実行後に外側の `catch` に移る
+      }
+      finally {
+        console.log(`Fetched Repositories : [${pageNumber} Pages] [${repos.length} Repos]`, repos);
+        
+        // API コールレート制限を取得する
+        try {
+          const rate = await fetchRateLimit(token);  // Throws
+          console.log('Rate Limit', rate);
+          this.rate = `${rate.remaining} / ${rate.limit}`;
+          this.allRateInfo = Object.entries(rate).map(([key, value]) => {
+            if(key !== 'reset') return `${key} : ${value}`;
+            const jstReset = new Date(value * 1000 + 32400000)  // `* 1000` = Seconds To Milliseconds , `+ 32400000` = 9 Hours To Milliseconds (JST)
+              .toISOString()                     // `ISO` But Gets JST
+              .replace((/[TZ]/g), ' ') + 'JST';  // `YYYY-MM-DD HH:mm:SS.sss JST`
+            return `${key} : ${value} (${jstReset})`;
+          }).join(' , ');
+        }
+        catch(rateLimitError) {  // 万が一エラーが発生した場合は空白表示とする
+          console.warn('Failed To Fetch Rate Limit', rateLimitError);
+          this.rate        = '';
+          this.allRateInfo = '';
+        }
+        
+        // エラーが発生した場合もそれまでの取得分は表示する
+        this.repos = repos;
+        this.sort  = {
+          user             : user,
+          activeColumn     : '',
+          name             : false,  // `this.sortBy()` で昇順になるよう、先に降順設定を与えておく
+          homepage         : null,
+          clone_url        : null,
+          fork             : null,
+          archived         : null,
+          language         : null,
+          created_at       : null,
+          updated_at       : null,
+          pushed_at        : null,
+          open_issues_count: null,
+          stargazers_count : null,
+          forks_count      : null,
+          size             : null
+        };
+        this.sortBy('name', 'toString');  // 通常名前の昇順で取得できるが、強制的にソートしておく
+      }
     }
     catch(error) {
       console.warn('fetch() : Failed', error);
@@ -429,15 +508,15 @@ export default class App extends Vue {
    * ソートする
    * 
    * @param propertyName プロパティ名 (GitHub API のプロパティ名と合わせる)
-   * @param mode mode 'toString' を指定すると小文字に統一して比較・'toBoolean' にするとブール値 (値の有無など) で比較する
+   * @param mode モード・`toString` を指定すると小文字に統一して比較・`toBoolean` にするとブール値 (値の有無など) で比較する
    */
   private sortBy(propertyName: string, mode?: 'toString' | 'toBoolean'): void {
     this.sort.activeColumn = propertyName;
-    this.sort[propertyName] = this.sort[propertyName] === null ? false : !this.sort[propertyName];
+    this.sort[propertyName] = this.sort[propertyName] == null ? false : !this.sort[propertyName];
     this.repos.sort((a: any, b: any) => {
       let aProperty = a[propertyName];
       let bProperty = b[propertyName];
-      if(mode === 'toString') {  // null・undefined 対策
+      if(mode === 'toString') {  // `null`・`undefined` 対策
         aProperty = (aProperty ?? '').toLowerCase();
         bProperty = (bProperty ?? '').toLowerCase();
       }

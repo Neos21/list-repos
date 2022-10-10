@@ -10,6 +10,15 @@ https://neos21.github.io/list-repos/?user=【User Name】
 ```
 
 
+## Increase GitHub API Call Rate Limit At First
+
+- GitHub Token Example : `ghp_XXXXXXXXXX`
+
+```
+https://neos21.github.io/list-repos/?user=【User Name】&token=【GitHub Token】
+```
+
+
 ## Project Setup
 
 ```sh
@@ -20,6 +29,7 @@ $ npm run serve
 
 $ npm run build
 ```
+
 
 ## Links
 
